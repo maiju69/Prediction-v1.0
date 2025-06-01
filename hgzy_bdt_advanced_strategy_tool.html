@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HGZY BDT Advanced Strategy Tool</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
+    h2 { color: #333; }
+    .round-input { margin-bottom: 10px; }
+    input { padding: 5px; margin-right: 5px; width: 120px; }
+    button { padding: 10px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+    button:hover { background: #45a049; }
+    #suggestion, #log { margin-top: 20px; padding: 10px; background: #e0f7e9; border-left: 4px solid #4CAF50; }
+    #log { background: #f0f0f0; border-left: 4px solid #999; max-height: 200px; overflow-y: auto; }
+    #timer { font-size: 18px; margin-top: 10px; font-weight: bold; color: #333; }
+  </style>
+</head>
+<body>
+  <h2>HGZY BDT - Advanced Color-Number Strategy Tool</h2>
+  <p>Enter the last 5 outcomes (format: color-number, e.g., red-8, green-3, purple-5):</p>
+
+  <div id="inputArea">
+    <div class="round-input"><input type="text" id="round1" placeholder="e.g., red-8"></div>
+    <div class="round-input"><input type="text" id="round2" placeholder="e.g., red-7"></div>
+    <div class="round-input"><input type="text" id="round3" placeholder="e.g., red-6"></div>
+    <div class="round-input"><input type="text" id="round4" placeholder="e.g., green-2"></div>
+    <div class="round-input"><input type="text" id="round5" placeholder="e.g., red-9"></div>
+  </div>
+
+  <button onclick="analyzePattern()">Analyze & Suggest Bet</button>
+
+  <div id="timer">Next reset in: <span id="countdown">60</span>s</div>
+  <div id="suggestion"></div>
+  <h3>Prediction History</h3>
+  <div id="log"></div>
+
+  <script>
+    function analyzePattern() {
+      const rounds = [
+        document.getElementById('round1').value.trim().toLowerCase(),
+        document.getElementById('round2').value.trim().toLowerCase(),
+        document.getElementById('round3').value.trim().toLowerCase(),
+        document.getElementById('round4').value.trim().toLowerCase(),
+        document.getElementById('round5').value.trim().toLowerCase()
+      ];
+
+      let colorCounts = { red: 0, green: 0, purple: 0 };
+      let bigCount = 0;
+      let smallCount = 0;
+      let purpleFlag = false;
+      let evenCount = 0;
+      let oddCount = 0;
+
+      rounds.forEach(round => {
+        const [color, number] = round.split('-');
+        const num = parseInt(number);
+        if (!color || isNaN(num)) return;
+
+        if (color in colorCounts) colorCounts[color]++;
+        if (num === 0 || num === 5 || num === 9) purpleFlag = true;
+        if (num >= 5) bigCount++;
+        else smallCount++;
+        if (num % 2 === 0) evenCount++;
+        else oddCount++;
+      });
+
+      let suggestion = "";
+
+      if (purpleFlag) {
+        suggestion += "⚠️ Purple number detected. Consider skipping the next round due to unpredictability.<br>";
+      }
+
+      if (colorCounts.red >= 3 && bigCount >= 3) {
+        suggestion += "✅ Strong Red + Big streak. Bet on <strong>Red + Big</strong>";
+      } else if (colorCounts.green >= 3 && smallCount >= 3) {
+        suggestion += "✅ Strong Green + Small streak. Bet on <strong>Green + Small</strong>";
+      } else if (evenCount >= 4) {
+        suggestion += "🧠 High Even occurrence. Consider <strong>Even + Big</strong>";
+      } else if (oddCount >= 4) {
+        suggestion += "🧠 High Odd occurrence. Consider <strong>Odd + Small</strong>";
+      } else {
+        suggestion += "⚖️ No strong streak. Bet on <strong>opposite trend</strong> of the last dominant pattern.";
+      }
+
+      document.getElementById("suggestion").innerHTML = suggestion;
+      updateLog(rounds, suggestion);
+    }
+
+    function updateLog(rounds, suggestion) {
+      const logEntry = document.createElement("div");
+      const time = new Date().toLocaleTimeString();
+      logEntry.innerHTML = `<strong>[${time}]</strong> Rounds: ${rounds.join(', ')}<br>Suggestion: ${suggestion}<hr>`;
+      document.getElementById("log").prepend(logEntry);
+    }
+
+    function resetInputs() {
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById(`round${i}`).value = "";
+      }
+      document.getElementById("suggestion").innerHTML = "";
+    }
+
+    function startCountdown() {
+      let seconds = 60;
+      const countdownEl = document.getElementById("countdown");
+
+      setInterval(() => {
+        seconds--;
+        countdownEl.textContent = seconds;
+        if (seconds <= 0) {
+          resetInputs();
+          seconds = 60;
+        }
+      }, 1000);
+    }
+
+    window.onload = startCountdown;
+  </script>
+</body>
+</html>

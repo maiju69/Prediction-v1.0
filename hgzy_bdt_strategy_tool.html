@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HGZY BDT Strategy Tool</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
+    h2 { color: #333; }
+    .round-input { margin-bottom: 10px; }
+    input { padding: 5px; margin-right: 5px; width: 100px; }
+    button { padding: 10px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+    button:hover { background: #45a049; }
+    #suggestion { margin-top: 20px; padding: 10px; background: #e0f7e9; border-left: 4px solid #4CAF50; }
+  </style>
+</head>
+<body>
+  <h2>HGZY BDT - Color-Number Sync Strategy Tool</h2>
+  <p>Enter the last 5 outcomes (format: color-number, e.g., red-8, green-3, purple-5):</p>
+
+  <div id="inputArea">
+    <div class="round-input"><input type="text" id="round1" placeholder="e.g., red-8"></div>
+    <div class="round-input"><input type="text" id="round2" placeholder="e.g., red-7"></div>
+    <div class="round-input"><input type="text" id="round3" placeholder="e.g., red-6"></div>
+    <div class="round-input"><input type="text" id="round4" placeholder="e.g., green-2"></div>
+    <div class="round-input"><input type="text" id="round5" placeholder="e.g., red-9"></div>
+  </div>
+
+  <button onclick="analyzePattern()">Get Bet Suggestion</button>
+
+  <div id="suggestion"></div>
+
+  <script>
+    function analyzePattern() {
+      const rounds = [
+        document.getElementById('round1').value.trim().toLowerCase(),
+        document.getElementById('round2').value.trim().toLowerCase(),
+        document.getElementById('round3').value.trim().toLowerCase(),
+        document.getElementById('round4').value.trim().toLowerCase(),
+        document.getElementById('round5').value.trim().toLowerCase()
+      ];
+
+      let colorCounts = { red: 0, green: 0, purple: 0 };
+      let bigCount = 0;
+      let smallCount = 0;
+      let purpleFlag = false;
+
+      rounds.forEach(round => {
+        const [color, number] = round.split('-');
+        const num = parseInt(number);
+        if (!color || isNaN(num)) return;
+
+        if (color in colorCounts) colorCounts[color]++;
+        if (num === 0 || num === 5 || num === 9) purpleFlag = true;
+        if (num >= 5) bigCount++;
+        else smallCount++;
+      });
+
+      let suggestion = "";
+
+      if (purpleFlag) {
+        suggestion += "⚠️ Purple number detected. Consider skipping the next round due to unpredictability.<br>";
+      }
+
+      if (colorCounts.red >= 3 && bigCount >= 3) {
+        suggestion += "✅ Bet on <strong>Red + Big</strong> - strong upward momentum detected.";
+      } else if (colorCounts.green >= 3 && smallCount >= 3) {
+        suggestion += "✅ Bet on <strong>Green + Small</strong> - downward trend dominant.";
+      } else {
+        suggestion += "⚖️ No strong streak. Bet on <strong>opposite trend</strong> of recent dominant outcomes.";
+      }
+
+      document.getElementById("suggestion").innerHTML = suggestion;
+    }
+  </script>
+</body>
+</html>

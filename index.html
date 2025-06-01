@@ -1,79 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lottery Predictor - Static Mockup</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    body {
-      background-color: #f8f9fa;
-      padding: 20px;
-    }
-    h1 {
-      margin-bottom: 30px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color and Number Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Live Lottery Predictor</h1>
+    <h1>Color and Number Prediction</h1>
+    <button onclick="predict()">Predict</button>
+    <p id="prediction"></p>
 
-    <div class="card mb-4">
-      <div class="card-header">Latest Results</div>
-      <div class="card-body">
-        <table class="table table-sm table-striped">
-          <thead>
-            <tr>
-              <th>Period</th>
-              <th>Number</th>
-              <th>Size</th>
-              <th>Color</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>20250601100050769</td><td>4</td><td>Small</td><td>Red</td></tr>
-            <tr><td>20250601100050770</td><td>0</td><td>Small</td><td>Red+Purple</td></tr>
-            <tr><td>20250601100050771</td><td>0</td><td>Small</td><td>Red+Purple</td></tr>
-            <tr><td>20250601100050772</td><td>0</td><td>Small</td><td>Red+Purple</td></tr>
-            <tr><td>20250601100050773</td><td>8</td><td>Big</td><td>Red</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <script>
+        function predict() {
+            var colors = ['Red', 'Green'];
+            var color = colors[Math.floor(Math.random() * colors.length)];
+            var number = Math.floor(Math.random() * 10); // Generate a random number between 0 and 9
+            var size = number >= 5 ? "big" : "small"; // Determine if the number is big or small
 
-    <div class="card mb-4">
-      <div class="card-header">Prediction</div>
-      <div class="card-body">
-        <p><strong>Period:</strong> 20250601100050774</p>
-        <p><strong>Predicted Number:</strong> 7</p>
-        <p><strong>Predicted Size:</strong> Big</p>
-        <p><strong>Predicted Color:</strong> Green</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">Prediction History</div>
-      <div class="card-body">
-        <table class="table table-sm table-hover">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Period</th>
-              <th>Number</th>
-              <th>Size</th>
-              <th>Color</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>2025-06-01 10:00:50</td><td>20250601100050771</td><td>4</td><td>Small</td><td>Red</td></tr>
-            <tr><td>2025-06-01 10:01:20</td><td>20250601100050772</td><td>6</td><td>Big</td><td>Green</td></tr>
-            <tr><td>2025-06-01 10:01:50</td><td>20250601100050773</td><td>3</td><td>Small</td><td>Red</td></tr>
-            <tr><td>2025-06-01 10:02:20</td><td>20250601100050774</td><td>7</td><td>Big</td><td>Green</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+            // Display prediction
+            var predictionText = "Color: " + color + ", Number: " + number + ", " + size;
+            document.getElementById("prediction").textContent = predictionText;
+        }
+    </script>
 </body>
-              </html>
+</html>
